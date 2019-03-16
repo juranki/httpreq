@@ -24,6 +24,8 @@ var (
 	ErrCannotSet = errors.New("cannot set field value")
 	// ErrInvalidTag is returned when tag cannot be parsed
 	ErrInvalidTag = errors.New("invalid tag")
+	// ErrInvalidAt is returned when at-attribute has invalid value
+	ErrInvalidAt = errors.New("invalid value for at-attribute")
 )
 
 // Unmarshal parses values from req into the fields of v
@@ -83,5 +85,5 @@ func getRawValueForTag(req *http.Request, tag string) (string, error) {
 	case "query":
 		return req.URL.Query().Get(name), nil
 	}
-	return "", fmt.Errorf("unknown location %s", at)
+	return "", errors.Wrap(ErrInvalidAt, at)
 }

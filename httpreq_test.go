@@ -43,12 +43,16 @@ type T2 struct {
 type T3 struct {
 	Hiihaa string `httpreq:"foo"`
 }
+type T4 struct {
+	Hiihaa string `httpreq:"foo,at=bar"`
+}
 
 func TestUnmarshal(t *testing.T) {
 	var t1 T1
 	var t1p *T1
 	var t2 T2
 	var t3 T3
+	var t4 T4
 	type args struct {
 		req *http.Request
 		v   interface{}
@@ -97,6 +101,14 @@ func TestUnmarshal(t *testing.T) {
 				&t3,
 			},
 			ErrInvalidTag,
+		},
+		{
+			"invalid at",
+			args{
+				req(t, "GET", "/?foo=srtval&haa=10"),
+				&t4,
+			},
+			ErrInvalidAt,
 		},
 	}
 	for _, tt := range tests {
