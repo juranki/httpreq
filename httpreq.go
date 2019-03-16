@@ -14,13 +14,25 @@ import (
 
 const tagName = "httpreq"
 
+var (
+	// ErrIsNil is returned when value is nil
+	ErrIsNil = errors.New("v is nil")
+	// ErrIsNotPointer is returned when value is not a pointer
+	ErrIsNotPointer = errors.New("v is not a pointer")
+)
+
 // Unmarshal parses values from req into the fields of v
 func Unmarshal(req *http.Request, v interface{}) error {
-	vv := reflect.ValueOf(v).Elem()
-	// s := vv.Elem()
+	if reflect.ValueOf(v).Kind() != reflect.Ptr {
+		return ErrIsNotPointer
+	}
+	if reflect.ValueOf(v).IsNil() {
+		return ErrIsNil
+	}
+	p := reflect.ValueOf(v).Elem()
 
-	for i := 0; i < vv.NumField(); i++ {
-		field := vv.Type().Field(i)
+	for i := 0; i < p.NumField(); i++ {
+		field := p.Type().Field(i)
 		tag := field.Tag.Get(tagName)
 		if tag == "" || tag == "-" {
 			continue
@@ -33,14 +45,14 @@ func Unmarshal(req *http.Request, v interface{}) error {
 
 		switch field.Type.Kind() {
 		case reflect.String:
-			fieldVal := vv.Field(i)
+			fieldVal := p.Field(i)
 			fieldVal.SetString(raw)
 		case reflect.Int:
 			intVal, err := strconv.ParseInt(raw, 10, 64)
 			if err != nil {
 				return err
 			}
-			fieldVal := vv.Field(i)
+			fieldVal := p.Field(i)
 			fieldVal.SetInt(intVal)
 
 		}
