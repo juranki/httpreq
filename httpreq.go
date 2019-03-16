@@ -13,7 +13,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-const tagName = "httpreq"
+const tagName = "req"
 
 var (
 	// ErrIsNil is returned when value is nil

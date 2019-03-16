@@ -32,19 +32,19 @@ func req(t *testing.T, method, url string) *http.Request {
 }
 
 type T1 struct {
-	Hiihaa   string `httpreq:"foo,at=query"`
-	Haa      int    `httpreq:"haa,at=query"`
+	Hiihaa   string `req:"foo,at=query"`
+	Haa      int    `req:"haa,at=query"`
 	skipThis int
 }
 type T2 struct {
-	hiihaa string `httpreq:"foo,at=query"`
-	Haa    int    `httpreq:"haa,at=query"`
+	hiihaa string `req:"foo,at=query"`
+	Haa    int    `req:"haa,at=query"`
 }
 type T3 struct {
-	Hiihaa string `httpreq:"foo"`
+	Hiihaa string `req:"foo"`
 }
 type T4 struct {
-	Hiihaa string `httpreq:"foo,at=bar"`
+	Hiihaa string `req:"foo,at=bar"`
 }
 
 func TestUnmarshal(t *testing.T) {
